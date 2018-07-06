@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanfossProject", "DanfossProject\DanfossProject.csproj", "{FB70EDF6-2F4F-4E00-8CF8-27D9EC540486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanfossProject.Tests", "DanfossProject.Tests\DanfossProject.Tests.csproj", "{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB70EDF6-2F4F-4E00-8CF8-27D9EC540486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB70EDF6-2F4F-4E00-8CF8-27D9EC540486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB70EDF6-2F4F-4E00-8CF8-27D9EC540486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB70EDF6-2F4F-4E00-8CF8-27D9EC540486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB63874F-2402-4E87-92F0-D4CC8F189D8D}
+	EndGlobalSection
+EndGlobal
