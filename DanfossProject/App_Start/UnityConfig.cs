@@ -17,9 +17,12 @@ namespace DanfossProject
 
 			// e.g. container.RegisterType<ITestService, TestService>();
 
+			container.RegisterType<IBuildingsService, BuildingsService>();
 			container.RegisterType<IWaterMetersService, WaterMetersService>();
-            
-            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+			
+
+
+			GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
 }

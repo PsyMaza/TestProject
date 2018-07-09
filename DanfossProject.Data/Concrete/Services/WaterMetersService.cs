@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DanfossProject.Data.Concrete.Services
 {
-	public class WaterMetersService : IWaterMetersService
+	public class WaterMetersService : IWaterMetersService, IDisposable
 	{
 		private readonly BaseDatabaseContext _dbContext;
 
@@ -52,6 +52,8 @@ namespace DanfossProject.Data.Concrete.Services
 		public async Task<bool> Delete(int id)
 		{
 			WaterMeter target = await _dbContext.WaterMeters.FindAsync(id);
+
+			if (target is null) return false;
 
 			try
 			{
@@ -106,6 +108,12 @@ namespace DanfossProject.Data.Concrete.Services
 			{
 				return false;
 			}
+		}
+
+		public void Dispose()
+		{
+			_dbContext.Dispose();
+			GC.SuppressFinalize(this);
 		}
 	}
 }

@@ -15,36 +15,54 @@ using DanfossProject.Data.Models.Entities;
 
 namespace DanfossProject.Controllers
 {
-    public class WaterMetersController : ApiController
-    {
+	public class WaterMetersController : ApiController
+	{
 		private IWaterMetersService _waterMetersService;
 
 		public WaterMetersController(IWaterMetersService service)
 		{
 			_waterMetersService = service;
 		}
-		
-        public async Task<IEnumerable<WaterMeter>> GetWaterMeters()
-        {
-            return await _waterMetersService.GetAll();
-        }
-		
-        [ResponseType(typeof(WaterMeter))]
-        public async Task<IHttpActionResult> GetWaterMeter([FromUri]int id)
-        {
+
+		[HttpGet]
+		[ResponseType(typeof(IEnumerable<WaterMeter>))]
+		public async Task<IEnumerable<WaterMeter>> GetAll()
+		{
+			return await _waterMetersService.GetAll();
+		}
+
+		[HttpGet]
+		[ResponseType(typeof(WaterMeter))]
+		public async Task<IHttpActionResult> GetById([FromUri]int id)
+		{
 			WaterMeter waterMeter = await _waterMetersService.GetById(id);
 
-            if (waterMeter is null)
-            {
-                return StatusCode(HttpStatusCode.NoContent);
-            }
+			if (waterMeter is null)
+			{
+				return StatusCode(HttpStatusCode.NoContent);
+			}
 
-            return Ok(waterMeter);
-        }
-				
+			return Ok(waterMeter);
+		}
+
+		[HttpPost]
+		[ResponseType(typeof(void))]
+		public async Task<IHttpActionResult> Add(WaterMeter waterMeter)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			bool result = await _waterMetersService.Add(waterMeter);
+
+			if (result) return StatusCode(HttpStatusCode.Created);
+			else return StatusCode(HttpStatusCode.Forbidden);
+		}
+
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> WaterMeterById(int id, WaterMeter waterMeter)
+		public async Task<IHttpActionResult> UpdateById(int id, WaterMeter waterMeter)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -62,36 +80,46 @@ namespace DanfossProject.Controllers
 			else return StatusCode(HttpStatusCode.Forbidden);
 		}
 
-		//// POST: api/WaterMeters
-		//[ResponseType(typeof(WaterMeter))]
-		//public IHttpActionResult PostWaterMeter(WaterMeter waterMeter)
-		//{
-		//    if (!ModelState.IsValid)
-		//    {
-		//        return BadRequest(ModelState);
-		//    }
+		[HttpPut]
+		[Route("api/WaterMeters/UpdateBySerialNumber/{serialNumber}")]
+		[ResponseType(typeof(void))]
+		public async Task<IHttpActionResult> UpdateBySerialNumber(string serialNumber, WaterMeter waterMeter)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
 
-		//    db.WaterMeters.Add(waterMeter);
-		//    db.SaveChanges();
+			bool result = await _waterMetersService.UpdateBySerialNumber(serialNumber, waterMeter);
 
-		//    return CreatedAtRoute("DefaultApi", new { id = waterMeter.Id }, waterMeter);
-		//}
+			if (result) return Ok();
+			else return StatusCode(HttpStatusCode.Forbidden);
+		}
 
-		//// DELETE: api/WaterMeters/5
-		//[ResponseType(typeof(WaterMeter))]
-		//public IHttpActionResult DeleteWaterMeter(int id)
-		//{
-		//    WaterMeter waterMeter = db.WaterMeters.Find(id);
-		//    if (waterMeter == null)
-		//    {
-		//        return NotFound();
-		//    }
+		[HttpPut]
+		[ResponseType(typeof(void))]
+		public async Task<IHttpActionResult> UpdateByBuildingId(int id, WaterMeter waterMeter)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
 
-		//    db.WaterMeters.Remove(waterMeter);
-		//    db.SaveChanges();
+			bool result = await _waterMetersService.UpdateByBuildingId(id, waterMeter);
 
-		//    return Ok(waterMeter);
-		//}
+			if (result) return Ok();
+			else return StatusCode(HttpStatusCode.Forbidden);
+		}
+
+		[HttpDelete]
+		[ResponseType(typeof(void))]
+		public async Task<IHttpActionResult> Delete(int id)
+		{
+			bool result = await _waterMetersService.Delete(id);
+
+			if (result) return Ok();
+			else return StatusCode(HttpStatusCode.Forbidden);
+		}
 
 		//protected override void Dispose(bool disposing)
 		//{

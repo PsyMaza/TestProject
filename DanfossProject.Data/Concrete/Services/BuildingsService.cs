@@ -2,47 +2,118 @@
 using DanfossProject.Data.Models.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DanfossProject.Data.Concrete.Services
 {
-	class BuildingsService : IBuildingsService
+	public class BuildingsService : IBuildingsService
 	{
-		public Task<bool> Add(Building building)
+		private readonly BaseDatabaseContext _dbContext;
+
+		public BuildingsService(BaseDatabaseContext dbContext)
 		{
-			throw new NotImplementedException();
+			_dbContext = dbContext;
 		}
 
-		public Task<bool> Delete(int id)
+		public async Task<Building> GetById(int id)
 		{
-			throw new NotImplementedException();
+			return await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.Id == id);
 		}
 
-		public Task<Building> Get(int id)
+		public async Task<IEnumerable<Building>> GetAll()
 		{
-			throw new NotImplementedException();
+			return await _dbContext.Buildings.Include(b => b.WaterMeter).ToListAsync();
 		}
 
-		public Task<IEnumerable<Building>> GetAll()
+		public async Task<Building> GetBuildingWithMaxConsumption()
 		{
-			throw new NotImplementedException();
+			return await _dbContext.Buildings
+				.Include(b => b.WaterMeter)
+				.FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Max(x => x.WaterMeter.CounterValue));
 		}
 
-		public Task<Building> GetBuildingWithMaxConsumption()
+		public async Task<Building> GetBuildingWithMinConsumption()
 		{
-			throw new NotImplementedException();
+			return await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Min(x => x.WaterMeter.CounterValue));
 		}
 
-		public Task<Building> GetBuildingWithMinConsumption()
+		public async Task<bool> Add(Building building)
 		{
-			throw new NotImplementedException();
+			Building overlap = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == building.Id);
+
+			if (overlap != null) return false;
+
+			try
+			{
+				_dbContext.Buildings.Add(building);
+
+				await _dbContext.SaveChangesAsync();
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
-		public Task<bool> Update(Building building)
+		public async Task<bool> UpdateById(int id, Building building)
 		{
-			throw new NotImplementedException();
+			Building target = await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(w => w.Id == id);
+
+			if (target is null) return false;
+
+			try
+			{
+				_dbContext.Entry(target).CurrentValues.SetValues(building);
+
+				await _dbContext.SaveChangesAsync();
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		private async Task<bool> UpdateBuildingValues(Building oldValue, Building newValue)
+		{
+			try
+			{
+				_dbContext.Entry(oldValue).CurrentValues.SetValues(newValue);
+
+				await _dbContext.SaveChangesAsync();
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		public async Task<bool> Delete(int id)
+		{
+			Building target = await _dbContext.Buildings.FindAsync(id);
+
+			if (target is null) return false;
+
+			try
+			{
+				_dbContext.Buildings.Remove(target);
+
+				await _dbContext.SaveChangesAsync();
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 	}
 }

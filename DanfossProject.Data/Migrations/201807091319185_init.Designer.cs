@@ -13,7 +13,7 @@ namespace DanfossProject.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201807071309513_init"; }
+            get { return "201807091319185_init"; }
         }
         
         string IMigrationMetadata.Source

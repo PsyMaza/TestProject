@@ -9,10 +9,12 @@ namespace DanfossProject
 	{
 		public static void Register (HttpConfiguration config)
 		{
-			// Конфигурация и службы веб-API
-
-			// Маршруты веб-API
 			config.MapHttpAttributeRoutes();
+
+			//config.Routes.MapHttpRoute(
+			//	name: null,
+			//	routeTemplate: "api/WaterMeters/UpdateBySerialNumber/{serialNumber}"
+			//);
 
 			config.Routes.MapHttpRoute(
 				name: null,
