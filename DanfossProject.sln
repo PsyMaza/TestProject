@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanfossProject", "DanfossPr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanfossProject.Tests", "DanfossProject.Tests\DanfossProject.Tests.csproj", "{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanfossProject.Data", "DanfossProject.Data\DanfossProject.Data.csproj", "{FC0BBFE2-7673-4983-834E-7E0FC3FAA565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6A14129-40FD-46D7-9B7F-A9A2AD3A8769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC0BBFE2-7673-4983-834E-7E0FC3FAA565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC0BBFE2-7673-4983-834E-7E0FC3FAA565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC0BBFE2-7673-4983-834E-7E0FC3FAA565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC0BBFE2-7673-4983-834E-7E0FC3FAA565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
