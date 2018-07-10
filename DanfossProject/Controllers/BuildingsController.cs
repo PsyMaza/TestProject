@@ -21,17 +21,17 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<Building>))]
-		public async Task<IEnumerable<Building>> GetAll()
+		[ResponseType(typeof(IEnumerable<BuildingModel>))]
+		public async Task<IEnumerable<BuildingModel>> GetAll()
 		{
 			return await _buildingsService.GetAll();
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Building))]
+		[ResponseType(typeof(BuildingModel))]
 		public async Task<IHttpActionResult> GetById([FromUri]int id)
 		{
-			Building waterMeter = await _buildingsService.GetById(id);
+			BuildingModel waterMeter = await _buildingsService.GetById(id);
 
 			if (waterMeter is null)
 			{
@@ -42,10 +42,10 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Building))]
+		[ResponseType(typeof(BuildingModel))]
 		public async Task<IHttpActionResult> GetBuildingWithMinConsumption()
 		{
-			Building waterMeter = await _buildingsService.GetBuildingWithMinConsumption();
+			BuildingModel waterMeter = await _buildingsService.GetBuildingWithMinConsumption();
 
 			if (waterMeter is null)
 			{
@@ -56,10 +56,10 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Building))]
+		[ResponseType(typeof(BuildingModel))]
 		public async Task<IHttpActionResult> GetBuildingWithMaxConsumption()
 		{
-			Building waterMeter = await _buildingsService.GetBuildingWithMaxConsumption();
+			BuildingModel waterMeter = await _buildingsService.GetBuildingWithMaxConsumption();
 
 			if (waterMeter is null)
 			{
@@ -71,7 +71,7 @@ namespace DanfossProject.Controllers
 
 		[HttpPost]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> Add(Building building)
+		public async Task<IHttpActionResult> Add(BuildingModel building)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -86,14 +86,14 @@ namespace DanfossProject.Controllers
 
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> UpdateById(int id, Building building)
+		public async Task<IHttpActionResult> UpdateById(int id, BuildingModel building)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			if (id != building.Id)
+			if (id != building.Id || id == 0)
 			{
 				return BadRequest();
 			}

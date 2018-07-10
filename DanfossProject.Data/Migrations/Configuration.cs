@@ -11,15 +11,17 @@ namespace DanfossProject.Data.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-        }
+			AutomaticMigrationDataLossAllowed = true;
+
+		}
 
         protected override void Seed(BaseDatabaseContext context)
         {
 			using (BaseDatabaseContext db = new BaseDatabaseContext())
 			{
-				db.Buildings.Add(new Building
+				db.Buildings.Add(new BuildingModel
 				{
-					Address = new Address
+					Address = new AddressModel
 					{
 						Country = "Россия",
 						City = "Лешково",
@@ -30,8 +32,8 @@ namespace DanfossProject.Data.Migrations
 					Company = "ДАНФОСС"
 				});
 
-				db.Buildings.Add(new Building {
-					Address = new Address
+				db.Buildings.Add(new BuildingModel {
+					Address = new AddressModel
 					{
 						Country = "Россия",
 						City = "Москва",
@@ -42,9 +44,9 @@ namespace DanfossProject.Data.Migrations
 					Company = "Ингосстрах"
 				});
 
-				db.Buildings.Add(new Building
+				db.Buildings.Add(new BuildingModel
 				{
-					Address = new Address
+					Address = new AddressModel
 					{
 						Country = "Россия",
 						City = "Москва",
@@ -55,9 +57,9 @@ namespace DanfossProject.Data.Migrations
 					Company = "ВымпелКом"
 				});
 
-				db.Buildings.Add(new Building
+				db.Buildings.Add(new BuildingModel
 				{
-					Address = new Address
+					Address = new AddressModel
 					{
 						Country = "Россия",
 						City = "Москва",
@@ -69,9 +71,9 @@ namespace DanfossProject.Data.Migrations
 
 				
 
-				db.Buildings.Add(new Building
+				db.Buildings.Add(new BuildingModel
 				{
-					Address = new Address
+					Address = new AddressModel
 					{
 						Country = "Россия",
 						City = "Москва",

@@ -9,12 +9,12 @@ namespace DanfossProject.Data.Abstract.Services
 {
 	public interface IWaterMetersService
 	{
-		Task<WaterMeter> GetById(int id);
-		Task<IEnumerable<WaterMeter>> GetAll();
-		Task<bool> Add(WaterMeter waterMeter);
-		Task<bool> UpdateById(int id, WaterMeter waterMeter);
-		Task<bool> UpdateBySerialNumber(string serialNumber, WaterMeter waterMeter);
-		Task<bool> UpdateByBuildingId(int buildingId, WaterMeter waterMeter);
+		Task<WaterMeterModel> GetById(int id);
+		Task<IEnumerable<WaterMeterModel>> GetAll();
+		Task<bool> Add(WaterMeterModel waterMeter);
+		Task<bool> UpdateById(int id, WaterMeterModel waterMeter);
+		Task<bool> UpdateBySerialNumber(string serialNumber, WaterMeterModel waterMeter);
+		Task<bool> UpdateByBuildingId(int buildingId, WaterMeterModel waterMeter);
 		Task<bool> Delete(int id);
 	}
 }

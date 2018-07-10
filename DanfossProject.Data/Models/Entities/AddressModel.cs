@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DanfossProject.Data.Models.Entities
 {
-	public class Address
+	public class AddressModel
 	{
 		[Required(ErrorMessage = "Название страны не может быть пустым")]
 		[RegularExpression(@"^[а-яА-ЯёЁa-zA-Z0-9-]+$", ErrorMessage = "Некорректное название страны")]
@@ -13,7 +13,8 @@ namespace DanfossProject.Data.Models.Entities
 
 		[Required(ErrorMessage = "Индекс не может быть пустым")]
 		public int ZIPCode { get; set; }
-		
+
+		[Required(ErrorMessage = "Название города не может быть пустым")]
 		[RegularExpression(@"^[а-яА-ЯёЁa-zA-Z0-9-]+$", ErrorMessage = "Некорректное название города")]
 		public string City { get; set; }
 				

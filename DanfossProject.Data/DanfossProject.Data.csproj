@@ -53,14 +53,14 @@
     <Compile Include="Concrete\Services\BuildingsService.cs" />
     <Compile Include="Concrete\Services\WaterMetersService.cs" />
     <Compile Include="BaseDatabaseContext.cs" />
-    <Compile Include="Migrations\201807091319185_init.cs" />
-    <Compile Include="Migrations\201807091319185_init.Designer.cs">
-      <DependentUpon>201807091319185_init.cs</DependentUpon>
+    <Compile Include="Migrations\201807100717360_init.cs" />
+    <Compile Include="Migrations\201807100717360_init.Designer.cs">
+      <DependentUpon>201807100717360_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Entities\Address.cs" />
-    <Compile Include="Models\Entities\Building.cs" />
-    <Compile Include="Models\Entities\WaterMeter.cs" />
+    <Compile Include="Models\Entities\AddressModel.cs" />
+    <Compile Include="Models\Entities\BuildingModel.cs" />
+    <Compile Include="Models\Entities\WaterMeterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,8 +68,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807091319185_init.resx">
-      <DependentUpon>201807091319185_init.cs</DependentUpon>
+    <Folder Include="Models\ReturnModel\" />
+    <Folder Include="Models\UpdateModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201807100717360_init.resx">
+      <DependentUpon>201807100717360_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

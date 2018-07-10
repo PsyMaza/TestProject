@@ -25,17 +25,17 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<WaterMeter>))]
-		public async Task<IEnumerable<WaterMeter>> GetAll()
+		[ResponseType(typeof(IEnumerable<WaterMeterModel>))]
+		public async Task<IEnumerable<WaterMeterModel>> GetAll()
 		{
 			return await _waterMetersService.GetAll();
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(WaterMeter))]
+		[ResponseType(typeof(WaterMeterModel))]
 		public async Task<IHttpActionResult> GetById([FromUri]int id)
 		{
-			WaterMeter waterMeter = await _waterMetersService.GetById(id);
+			WaterMeterModel waterMeter = await _waterMetersService.GetById(id);
 
 			if (waterMeter is null)
 			{
@@ -47,7 +47,7 @@ namespace DanfossProject.Controllers
 
 		[HttpPost]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> Add(WaterMeter waterMeter)
+		public async Task<IHttpActionResult> Add(WaterMeterModel waterMeter)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -62,7 +62,7 @@ namespace DanfossProject.Controllers
 
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> UpdateById(int id, WaterMeter waterMeter)
+		public async Task<IHttpActionResult> UpdateById(int id, WaterMeterModel waterMeter)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -83,7 +83,7 @@ namespace DanfossProject.Controllers
 		[HttpPut]
 		[Route("api/WaterMeters/UpdateBySerialNumber/{serialNumber}")]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> UpdateBySerialNumber(string serialNumber, WaterMeter waterMeter)
+		public async Task<IHttpActionResult> UpdateBySerialNumber(string serialNumber, WaterMeterModel waterMeter)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -98,7 +98,7 @@ namespace DanfossProject.Controllers
 
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> UpdateByBuildingId(int id, WaterMeter waterMeter)
+		public async Task<IHttpActionResult> UpdateByBuildingId(int id, WaterMeterModel waterMeter)
 		{
 			if (!ModelState.IsValid)
 			{

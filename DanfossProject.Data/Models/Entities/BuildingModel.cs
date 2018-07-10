@@ -6,15 +6,15 @@ using System.Text;
 
 namespace DanfossProject.Data.Models.Entities
 {
-    public class Building
+    public class BuildingModel
     {
 		[Key]
 		public int Id { get; set; }
 		
-		public Address Address { get; set; }
+		public AddressModel Address { get; set; }
 		
 		public string Company { get; set; }
 
-		public WaterMeter WaterMeter { get; set; }
+		public virtual WaterMeterModel WaterMeter { get; set; }
 	}
 }

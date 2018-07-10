@@ -6,14 +6,25 @@ using System.Text;
 
 namespace DanfossProject.Data
 {
-    public class BaseDatabaseContext: DbContext
-    {
-		public BaseDatabaseContext ()
+	public class BaseDatabaseContext : DbContext
+	{
+		public BaseDatabaseContext()
 			: base("DanfossDB")
-		{ }
+		{
+			
+		}
 
-		public DbSet<Building> Buildings { get; set; }
+		public DbSet<BuildingModel> Buildings { get; set; }
 
-		public DbSet<WaterMeter> WaterMeters { get; set; }
+		public DbSet<WaterMeterModel> WaterMeters { get; set; }
+
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<WaterMeterModel>()
+				.HasOptional(w => w.Building)
+				.WithOptionalPrincipal(b => b.WaterMeter);
+
+			base.OnModelCreating(modelBuilder);
+		}
 	}
 }

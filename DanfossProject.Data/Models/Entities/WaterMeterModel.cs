@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DanfossProject.Data.Models.Entities
 {
-    public class WaterMeter
+    public class WaterMeterModel
     {
 		[Key]
 		public int Id { get; set; }
@@ -19,5 +19,7 @@ namespace DanfossProject.Data.Models.Entities
 		[Required(ErrorMessage = "Показания счетчика не могут быть пустыми")]
 		[Range(0, int.MaxValue, ErrorMessage = "Некорректное число")]
 		public int CounterValue { get; set; }
+
+		public virtual BuildingModel Building { get; set; }
 	}
 }

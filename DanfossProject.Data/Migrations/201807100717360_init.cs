@@ -8,24 +8,24 @@ namespace DanfossProject.Data.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Buildings",
+                "dbo.BuildingModels",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Address_Country = c.String(nullable: false),
                         Address_ZIPCode = c.Int(nullable: false),
-                        Address_City = c.String(),
+                        Address_City = c.String(nullable: false),
                         Address_Street = c.String(),
                         Address_HouseNumber = c.String(nullable: false),
                         Company = c.String(),
                         WaterMeter_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.WaterMeters", t => t.WaterMeter_Id)
+                .ForeignKey("dbo.WaterMeterModels", t => t.WaterMeter_Id)
                 .Index(t => t.WaterMeter_Id);
             
             CreateTable(
-                "dbo.WaterMeters",
+                "dbo.WaterMeterModels",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -38,10 +38,10 @@ namespace DanfossProject.Data.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.Buildings", "WaterMeter_Id", "dbo.WaterMeters");
-            DropIndex("dbo.Buildings", new[] { "WaterMeter_Id" });
-            DropTable("dbo.WaterMeters");
-            DropTable("dbo.Buildings");
+            DropForeignKey("dbo.BuildingModels", "WaterMeter_Id", "dbo.WaterMeterModels");
+            DropIndex("dbo.BuildingModels", new[] { "WaterMeter_Id" });
+            DropTable("dbo.WaterMeterModels");
+            DropTable("dbo.BuildingModels");
         }
     }
 }
