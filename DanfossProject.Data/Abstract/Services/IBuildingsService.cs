@@ -9,12 +9,12 @@ namespace DanfossProject.Data.Abstract.Services
 {
 	public interface IBuildingsService
 	{		
-		Task<BuildingModel> GetById(int id);
-		Task<IEnumerable<BuildingModel>> GetAll();
-		Task<BuildingModel> GetBuildingWithMinConsumption();
-		Task<BuildingModel> GetBuildingWithMaxConsumption();
-		Task<bool> Add(BuildingModel building);
-		Task<bool> UpdateById(int id, BuildingModel building);
+		Task<Building> GetById(int id);
+		Task<IEnumerable<Building>> GetAll();
+		Task<Building> GetBuildingWithMinConsumption();
+		Task<Building> GetBuildingWithMaxConsumption();
+		Task<bool> Add(Building building);
+		Task<bool> UpdateById(int id, Building building);
 		Task<bool> Delete(int id);
 	}
 }

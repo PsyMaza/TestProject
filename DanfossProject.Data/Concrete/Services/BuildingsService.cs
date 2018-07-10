@@ -18,31 +18,31 @@ namespace DanfossProject.Data.Concrete.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task<BuildingModel> GetById(int id)
+		public async Task<Building> GetById(int id)
 		{
 			return await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.Id == id);
 		}
 
-		public async Task<IEnumerable<BuildingModel>> GetAll()
+		public async Task<IEnumerable<Building>> GetAll()
 		{
 			return await _dbContext.Buildings.Include(b => b.WaterMeter).ToListAsync();
 		}
 
-		public async Task<BuildingModel> GetBuildingWithMaxConsumption()
+		public async Task<Building> GetBuildingWithMaxConsumption()
 		{
 			return await _dbContext.Buildings
 				.Include(b => b.WaterMeter)
 				.FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Max(x => x.WaterMeter.CounterValue));
 		}
 
-		public async Task<BuildingModel> GetBuildingWithMinConsumption()
+		public async Task<Building> GetBuildingWithMinConsumption()
 		{
 			return await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Min(x => x.WaterMeter.CounterValue));
 		}
 
-		public async Task<bool> Add(BuildingModel building)
+		public async Task<bool> Add(Building building)
 		{
-			BuildingModel overlap = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == building.Id);
+			Building overlap = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == building.Id);
 
 			if (overlap != null) return false;
 
@@ -60,17 +60,11 @@ namespace DanfossProject.Data.Concrete.Services
 			}
 		}
 
-		public async Task<bool> UpdateById(int id, BuildingModel building)
+		public async Task<bool> UpdateById(int id, Building building)
 		{
-			BuildingModel target = await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.Id == building.Id);
-
 			try
 			{
-				//target.WaterMeter = building.WaterMeter;
-				//_dbContext.Buildings.Include(b => b.WaterMeter);
-
-				_dbContext.Entry(target).CurrentValues.SetValues(building);				
-				//_dbContext.Entry(building).State = EntityState.Modified;
+				_dbContext.Entry(building).State = EntityState.Modified;
 
 				await _dbContext.SaveChangesAsync();
 
@@ -82,25 +76,9 @@ namespace DanfossProject.Data.Concrete.Services
 			}
 		}
 
-		private async Task<bool> UpdateBuildingValues(BuildingModel oldValue, BuildingModel newValue)
-		{
-			try
-			{
-				_dbContext.Entry(oldValue).CurrentValues.SetValues(newValue);
-
-				await _dbContext.SaveChangesAsync();
-
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
-		}
-
 		public async Task<bool> Delete(int id)
 		{
-			BuildingModel target = await _dbContext.Buildings.FindAsync(id);
+			Building target = await _dbContext.Buildings.FindAsync(id);
 
 			if (target is null) return false;
 

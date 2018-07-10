@@ -19,7 +19,7 @@ namespace DanfossProject.Data.Migrations
         {
 			using (BaseDatabaseContext db = new BaseDatabaseContext())
 			{
-				db.Buildings.Add(new BuildingModel
+				db.Buildings.Add(new Building
 				{
 					Address = new AddressModel
 					{
@@ -32,7 +32,7 @@ namespace DanfossProject.Data.Migrations
 					Company = "ДАНФОСС"
 				});
 
-				db.Buildings.Add(new BuildingModel {
+				db.Buildings.Add(new Building {
 					Address = new AddressModel
 					{
 						Country = "Россия",
@@ -44,7 +44,7 @@ namespace DanfossProject.Data.Migrations
 					Company = "Ингосстрах"
 				});
 
-				db.Buildings.Add(new BuildingModel
+				db.Buildings.Add(new Building
 				{
 					Address = new AddressModel
 					{
@@ -57,7 +57,7 @@ namespace DanfossProject.Data.Migrations
 					Company = "ВымпелКом"
 				});
 
-				db.Buildings.Add(new BuildingModel
+				db.Buildings.Add(new Building
 				{
 					Address = new AddressModel
 					{
@@ -71,7 +71,7 @@ namespace DanfossProject.Data.Migrations
 
 				
 
-				db.Buildings.Add(new BuildingModel
+				db.Buildings.Add(new Building
 				{
 					Address = new AddressModel
 					{
@@ -81,6 +81,24 @@ namespace DanfossProject.Data.Migrations
 						HouseNumber = "130/1",
 						ZIPCode = 100043
 					}
+				});
+
+				db.WaterMeters.Add(new WaterMeter
+				{
+					SerialNumber = "TestABC1",
+					CounterValue = 123123
+				});
+
+				db.WaterMeters.Add(new WaterMeter
+				{
+					SerialNumber = "TestABC2",
+					CounterValue = 442
+				});
+
+				db.WaterMeters.Add(new WaterMeter
+				{
+					SerialNumber = "TestABC3",
+					CounterValue = 987798
 				});
 
 				db.SaveChanges();

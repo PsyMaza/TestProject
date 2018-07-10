@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DanfossProject.Data.Models.Entities
 {
-    public class BuildingModel
+    public class Building
     {
 		[Key]
 		public int Id { get; set; }
@@ -15,6 +15,8 @@ namespace DanfossProject.Data.Models.Entities
 		
 		public string Company { get; set; }
 
-		public virtual WaterMeterModel WaterMeter { get; set; }
+		public int? WaterMeterId { get; set; }
+
+		public WaterMeter WaterMeter { get; set; }
 	}
 }

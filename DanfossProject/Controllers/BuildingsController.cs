@@ -21,17 +21,17 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<BuildingModel>))]
-		public async Task<IEnumerable<BuildingModel>> GetAll()
+		[ResponseType(typeof(IEnumerable<Building>))]
+		public async Task<IEnumerable<Building>> GetAll()
 		{
 			return await _buildingsService.GetAll();
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(BuildingModel))]
+		[ResponseType(typeof(Building))]
 		public async Task<IHttpActionResult> GetById([FromUri]int id)
 		{
-			BuildingModel waterMeter = await _buildingsService.GetById(id);
+			Building waterMeter = await _buildingsService.GetById(id);
 
 			if (waterMeter is null)
 			{
@@ -42,10 +42,10 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(BuildingModel))]
+		[ResponseType(typeof(Building))]
 		public async Task<IHttpActionResult> GetBuildingWithMinConsumption()
 		{
-			BuildingModel waterMeter = await _buildingsService.GetBuildingWithMinConsumption();
+			Building waterMeter = await _buildingsService.GetBuildingWithMinConsumption();
 
 			if (waterMeter is null)
 			{
@@ -56,10 +56,10 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(BuildingModel))]
+		[ResponseType(typeof(Building))]
 		public async Task<IHttpActionResult> GetBuildingWithMaxConsumption()
 		{
-			BuildingModel waterMeter = await _buildingsService.GetBuildingWithMaxConsumption();
+			Building waterMeter = await _buildingsService.GetBuildingWithMaxConsumption();
 
 			if (waterMeter is null)
 			{
@@ -71,7 +71,7 @@ namespace DanfossProject.Controllers
 
 		[HttpPost]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> Add(BuildingModel building)
+		public async Task<IHttpActionResult> Add(Building building)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -86,7 +86,7 @@ namespace DanfossProject.Controllers
 
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> UpdateById(int id, BuildingModel building)
+		public async Task<IHttpActionResult> UpdateById(int id, Building building)
 		{
 			if (!ModelState.IsValid)
 			{

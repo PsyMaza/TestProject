@@ -18,19 +18,19 @@ namespace DanfossProject.Data.Concrete.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task<WaterMeterModel> GetById(int id)
+		public async Task<WaterMeter> GetById(int id)
 		{
 				return await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
 		}
 
-		public async Task<IEnumerable<WaterMeterModel>> GetAll()
+		public async Task<IEnumerable<WaterMeter>> GetAll()
 		{
 			return await _dbContext.WaterMeters.ToListAsync();
 		}
 
-		public async Task<bool> Add(WaterMeterModel waterMeter)
+		public async Task<bool> Add(WaterMeter waterMeter)
 		{
-				WaterMeterModel overlap = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == waterMeter.Id);
+				WaterMeter overlap = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == waterMeter.Id);
 
 				if (overlap != null) return false;
 
@@ -51,7 +51,7 @@ namespace DanfossProject.Data.Concrete.Services
 
 		public async Task<bool> Delete(int id)
 		{
-			WaterMeterModel target = await _dbContext.WaterMeters.FindAsync(id);
+			WaterMeter target = await _dbContext.WaterMeters.FindAsync(id);
 
 			if (target is null) return false;
 
@@ -69,23 +69,23 @@ namespace DanfossProject.Data.Concrete.Services
 			}
 		}
 
-		public async Task<bool> UpdateById(int id, WaterMeterModel waterMeter)
+		public async Task<bool> UpdateById(int id, WaterMeter waterMeter)
 		{
-			WaterMeterModel target = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
+			WaterMeter target = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
 
 			return await UpdateWaterMeterValues(target, waterMeter);
 		}
 
-		public async Task<bool> UpdateBySerialNumber(string serialNumber, WaterMeterModel waterMeter)
+		public async Task<bool> UpdateBySerialNumber(string serialNumber, WaterMeter waterMeter)
 		{
-			WaterMeterModel target = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.SerialNumber.Equals(serialNumber));
+			WaterMeter target = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.SerialNumber.Equals(serialNumber));
 
 			return await UpdateWaterMeterValues(target, waterMeter);
 		}
 
-		public async Task<bool> UpdateByBuildingId(int buildingId, WaterMeterModel waterMeter)
+		public async Task<bool> UpdateByBuildingId(int buildingId, WaterMeter waterMeter)
 		{
-			WaterMeterModel target = await _dbContext.Buildings
+			WaterMeter target = await _dbContext.Buildings
 				.Include(b => b.WaterMeter)
 				.Where(b => b.Id == buildingId)
 				.Select(b => b.WaterMeter)
@@ -94,7 +94,7 @@ namespace DanfossProject.Data.Concrete.Services
 			return await UpdateWaterMeterValues(target, waterMeter);
 		}
 
-		private async Task<bool> UpdateWaterMeterValues (WaterMeterModel oldValue, WaterMeterModel newValue)
+		private async Task<bool> UpdateWaterMeterValues (WaterMeter oldValue, WaterMeter newValue)
 		{
 			try
 			{
