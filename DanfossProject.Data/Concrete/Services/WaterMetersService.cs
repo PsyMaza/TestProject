@@ -1,5 +1,10 @@
-﻿using DanfossProject.Data.Abstract.Services;
+﻿using AutoMapper;
+using DanfossProject.Data.Abstract.Services;
+using DanfossProject.Data.Models;
+using DanfossProject.Data.Models.CreateModel;
 using DanfossProject.Data.Models.Entities;
+using DanfossProject.Data.Models.ReturnModel;
+using DanfossProject.Data.Models.UpdateModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,42 +23,51 @@ namespace DanfossProject.Data.Concrete.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task<WaterMeter> GetById(int id)
+		public async Task<WaterMeterReturnModel> GetById(int id)
 		{
-				return await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
+			WaterMeterModel waterMeter = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
+
+			return Mapper.Map<WaterMeterModel, WaterMeterReturnModel>(waterMeter);
 		}
 
-		public async Task<IEnumerable<WaterMeter>> GetAll()
+		public async Task<IEnumerable<WaterMeterReturnModel>> GetAll()
 		{
-			return await _dbContext.WaterMeters.ToListAsync();
+			List<WaterMeterModel> waterMeter = await _dbContext.WaterMeters.ToListAsync();
+
+			return Mapper.Map<IEnumerable<WaterMeterModel>, List<WaterMeterReturnModel>>(waterMeter);
 		}
 
-		public async Task<bool> Add(WaterMeter waterMeter)
+		public async Task<Response> Add(WaterMeterCreateModel waterMeter)
 		{
-				WaterMeter overlap = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == waterMeter.Id);
+			WaterMeterModel convertWaterMeter = Mapper.Map<WaterMeterCreateModel, WaterMeterModel>(waterMeter);
 
-				if (overlap != null) return false;
+			WaterMeterModel overlap = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == waterMeter.Id);
 
-				try
-				{
-					_dbContext.WaterMeters.Add(waterMeter);
+			if (overlap != null) return new Response
+			{
+				Message = "Такой Id уже используется."
+			};
 
-					await _dbContext.SaveChangesAsync();
+			try
+			{
+				_dbContext.WaterMeters.Add(convertWaterMeter);
 
-					return true;
-				}
-				catch
-				{
-					return false;
-				}
-			
+				await _dbContext.SaveChangesAsync();
+
+				return new Response { Ok = true };
+			}
+			catch
+			{
+				return new Response { Message = "Произошла ошибка при добавлении. Пожалуйсте повторите попытку." };
+			}
+
 		}
 
-		public async Task<bool> Delete(int id)
+		public async Task<Response> Delete(int id)
 		{
-			WaterMeter target = await _dbContext.WaterMeters.FindAsync(id);
+			WaterMeterModel target = await _dbContext.WaterMeters.FindAsync(id);
 
-			if (target is null) return false;
+			if (target is null) return new Response { Message = "Счетчик не найден." };
 
 			try
 			{
@@ -61,40 +75,52 @@ namespace DanfossProject.Data.Concrete.Services
 
 				await _dbContext.SaveChangesAsync();
 
-				return true;
+				return new Response { Ok = true };
 			}
 			catch
 			{
-				return false;
+				return new Response { Message = "Произошла ошибка при удалении. Пожалуйсте повторите попытку." };
 			}
 		}
 
-		public async Task<bool> UpdateById(int id, WaterMeter waterMeter)
+		public async Task<Response> UpdateById(int id, WaterMeterUpdateModel waterMeter)
 		{
-			WaterMeter target = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
+			WaterMeterModel targetWaterMeter = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.Id == id);
 
-			return await UpdateWaterMeterValues(target, waterMeter);
+			if (targetWaterMeter is null) return new Response { Message = "Счетчик не найден." };
+
+			WaterMeterModel convertWaterMeter = Mapper.Map<WaterMeterUpdateModel, WaterMeterModel>(waterMeter);
+
+			return await UpdateWaterMeterValues(targetWaterMeter, convertWaterMeter);
 		}
 
-		public async Task<bool> UpdateBySerialNumber(string serialNumber, WaterMeter waterMeter)
+		public async Task<Response> UpdateBySerialNumber(string serialNumber, WaterMeterUpdateModel waterMeter)
 		{
-			WaterMeter target = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.SerialNumber.Equals(serialNumber));
+			WaterMeterModel targetWaterMeter = await _dbContext.WaterMeters.FirstOrDefaultAsync(w => w.SerialNumber.Equals(serialNumber));
 
-			return await UpdateWaterMeterValues(target, waterMeter);
+			if (targetWaterMeter is null) return new Response { Message = "Счетчик не найден." };
+
+			WaterMeterModel convertWaterMeter = Mapper.Map<WaterMeterUpdateModel, WaterMeterModel>(waterMeter);
+
+			return await UpdateWaterMeterValues(targetWaterMeter, convertWaterMeter);
 		}
 
-		public async Task<bool> UpdateByBuildingId(int buildingId, WaterMeter waterMeter)
+		public async Task<Response> UpdateByBuildingId(int buildingId, WaterMeterUpdateModel waterMeter)
 		{
-			WaterMeter target = await _dbContext.Buildings
+			WaterMeterModel targetWaterMeter = await _dbContext.Buildings
 				.Include(b => b.WaterMeter)
 				.Where(b => b.Id == buildingId)
 				.Select(b => b.WaterMeter)
 				.FirstOrDefaultAsync();
 
-			return await UpdateWaterMeterValues(target, waterMeter);
+			if (targetWaterMeter is null) return new Response { Message = "Счетчик не найден." };
+
+			WaterMeterModel convertWaterMeter = Mapper.Map<WaterMeterUpdateModel, WaterMeterModel>(waterMeter);
+
+			return await UpdateWaterMeterValues(targetWaterMeter, convertWaterMeter);
 		}
 
-		private async Task<bool> UpdateWaterMeterValues (WaterMeter oldValue, WaterMeter newValue)
+		private async Task<Response> UpdateWaterMeterValues(WaterMeterModel oldValue, WaterMeterModel newValue)
 		{
 			try
 			{
@@ -102,17 +128,31 @@ namespace DanfossProject.Data.Concrete.Services
 
 				await _dbContext.SaveChangesAsync();
 
-				return true;
+				return new Response { Ok = true };
 			}
 			catch
 			{
-				return false;
+				return new Response { Message = "Произошла ошибка при обновлении. Пожалуйсте повторите попытку." };
 			}
+		}
+
+		private bool disposed = false;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					_dbContext.Dispose();
+				}
+			}
+			this.disposed = true;
 		}
 
 		public void Dispose()
 		{
-			_dbContext.Dispose();
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 	}

@@ -12,9 +12,13 @@ namespace DanfossProject.Data
 			: base("DanfossDB")
 		{}
 
-		public DbSet<Building> Buildings { get; set; }
+		public DbSet<BuildingModel> Buildings { get; set; }
 
-		public DbSet<WaterMeter> WaterMeters { get; set; }
-		
+		public DbSet<WaterMeterModel> WaterMeters { get; set; }
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+		}
 	}
 }

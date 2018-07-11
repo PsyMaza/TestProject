@@ -7,13 +7,13 @@ namespace DanfossProject.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class init : IMigrationMetadata
+    public sealed partial class addAddressHashCode : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(addAddressHashCode));
         
         string IMigrationMetadata.Id
         {
-            get { return "201807101509138_init"; }
+            get { return "201807102054545_addAddressHashCode"; }
         }
         
         string IMigrationMetadata.Source

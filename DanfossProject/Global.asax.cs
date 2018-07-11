@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using DanfossProject.App_Start;
+using System.Web.Http;
 
 namespace DanfossProject
 {
@@ -8,6 +9,7 @@ namespace DanfossProject
 		{
 			GlobalConfiguration.Configure(WebApiConfig.Register);
 			UnityConfig.RegisterComponents();
+			AutoMapperConfig.Initialize();
 		}
 	}
 }

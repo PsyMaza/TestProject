@@ -1,5 +1,9 @@
 ﻿using DanfossProject.Data.Abstract.Services;
+using DanfossProject.Data.Models;
+using DanfossProject.Data.Models.CreateModel;
 using DanfossProject.Data.Models.Entities;
+using DanfossProject.Data.Models.ReturnModel;
+using DanfossProject.Data.Models.UpdateModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,17 +25,17 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(IEnumerable<Building>))]
-		public async Task<IEnumerable<Building>> GetAll()
+		[ResponseType(typeof(IEnumerable<BuildingReturnModel>))]
+		public async Task<IEnumerable<BuildingReturnModel>> GetAll()
 		{
 			return await _buildingsService.GetAll();
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Building))]
+		[ResponseType(typeof(BuildingReturnModel))]
 		public async Task<IHttpActionResult> GetById([FromUri]int id)
 		{
-			Building waterMeter = await _buildingsService.GetById(id);
+			BuildingReturnModel waterMeter = await _buildingsService.GetById(id);
 
 			if (waterMeter is null)
 			{
@@ -42,10 +46,10 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Building))]
+		[ResponseType(typeof(BuildingReturnModel))]
 		public async Task<IHttpActionResult> GetBuildingWithMinConsumption()
 		{
-			Building waterMeter = await _buildingsService.GetBuildingWithMinConsumption();
+			BuildingReturnModel waterMeter = await _buildingsService.GetBuildingWithMinConsumption();
 
 			if (waterMeter is null)
 			{
@@ -56,10 +60,10 @@ namespace DanfossProject.Controllers
 		}
 
 		[HttpGet]
-		[ResponseType(typeof(Building))]
+		[ResponseType(typeof(BuildingReturnModel))]
 		public async Task<IHttpActionResult> GetBuildingWithMaxConsumption()
 		{
-			Building waterMeter = await _buildingsService.GetBuildingWithMaxConsumption();
+			BuildingReturnModel waterMeter = await _buildingsService.GetBuildingWithMaxConsumption();
 
 			if (waterMeter is null)
 			{
@@ -71,22 +75,22 @@ namespace DanfossProject.Controllers
 
 		[HttpPost]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> Add(Building building)
+		public async Task<IHttpActionResult> Add(BuildingCreateModel building)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			bool result = await _buildingsService.Add(building);
+			Response result = await _buildingsService.Add(building);
 
-			if (result) return StatusCode(HttpStatusCode.Created);
-			else return StatusCode(HttpStatusCode.Forbidden);
+			if (result.Ok) return StatusCode(HttpStatusCode.Created);
+			else return BadRequest(result.Message);
 		}
 
 		[HttpPut]
 		[ResponseType(typeof(void))]
-		public async Task<IHttpActionResult> UpdateById(int id, Building building)
+		public async Task<IHttpActionResult> UpdateById(int id, BuildingUpdateModel building)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -98,20 +102,29 @@ namespace DanfossProject.Controllers
 				return BadRequest();
 			}
 
-			bool result = await _buildingsService.UpdateById(id, building);
+			Response result = await _buildingsService.UpdateById(id, building);
 
-			if (result) return Ok();
-			else return StatusCode(HttpStatusCode.Forbidden);
+			if (result.Ok) return Ok();
+			else return BadRequest(result.Message);
 		}
 
 		[HttpDelete]
 		[ResponseType(typeof(void))]
 		public async Task<IHttpActionResult> Delete(int id)
 		{
-			bool result = await _buildingsService.Delete(id);
+			Response result = await _buildingsService.Delete(id);
 
-			if (result) return Ok();
-			else return StatusCode(HttpStatusCode.Forbidden);
+			if (result.Ok) return Ok();
+			else return BadRequest(result.Message);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				_buildingsService.Dispose();
+			}
+			base.Dispose(disposing);
 		}
 	}
 }

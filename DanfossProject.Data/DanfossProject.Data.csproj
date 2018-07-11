@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -39,6 +42,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,14 +60,25 @@
     <Compile Include="Concrete\Services\BuildingsService.cs" />
     <Compile Include="Concrete\Services\WaterMetersService.cs" />
     <Compile Include="BaseDatabaseContext.cs" />
-    <Compile Include="Migrations\201807101509138_init.cs" />
-    <Compile Include="Migrations\201807101509138_init.Designer.cs">
-      <DependentUpon>201807101509138_init.cs</DependentUpon>
+    <Compile Include="Migrations\201807101631336_init.cs" />
+    <Compile Include="Migrations\201807101631336_init.Designer.cs">
+      <DependentUpon>201807101631336_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807102054545_addAddressHashCode.cs" />
+    <Compile Include="Migrations\201807102054545_addAddressHashCode.Designer.cs">
+      <DependentUpon>201807102054545_addAddressHashCode.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CreateModel\BuildingCreateModel.cs" />
+    <Compile Include="Models\CreateModel\WaterMeterCreateModel.cs" />
     <Compile Include="Models\Entities\AddressModel.cs" />
     <Compile Include="Models\Entities\BuildingModel.cs" />
     <Compile Include="Models\Entities\WaterMeterModel.cs" />
+    <Compile Include="Models\Response.cs" />
+    <Compile Include="Models\ReturnModel\BuildingReturnModel.cs" />
+    <Compile Include="Models\ReturnModel\WaterMeterReturnModel.cs" />
+    <Compile Include="Models\UpdateModel\BuildingUpdateModel.cs" />
+    <Compile Include="Models\UpdateModel\WaterMeterUpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,12 +86,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\ReturnModel\" />
-    <Folder Include="Models\UpdateModel\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807101509138_init.resx">
-      <DependentUpon>201807101509138_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807101631336_init.resx">
+      <DependentUpon>201807101631336_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807102054545_addAddressHashCode.resx">
+      <DependentUpon>201807102054545_addAddressHashCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

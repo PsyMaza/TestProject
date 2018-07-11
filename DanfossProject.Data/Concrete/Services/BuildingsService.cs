@@ -1,5 +1,10 @@
-﻿using DanfossProject.Data.Abstract.Services;
+﻿using AutoMapper;
+using DanfossProject.Data.Abstract.Services;
+using DanfossProject.Data.Models;
+using DanfossProject.Data.Models.CreateModel;
 using DanfossProject.Data.Models.Entities;
+using DanfossProject.Data.Models.ReturnModel;
+using DanfossProject.Data.Models.UpdateModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,69 +23,97 @@ namespace DanfossProject.Data.Concrete.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task<Building> GetById(int id)
+		public async Task<BuildingReturnModel> GetById(int id)
 		{
-			return await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.Id == id);
+			BuildingModel building = await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.Id == id);
+
+			return Mapper.Map<BuildingModel, BuildingReturnModel>(building);
 		}
 
-		public async Task<IEnumerable<Building>> GetAll()
+		public async Task<IEnumerable<BuildingReturnModel>> GetAll()
 		{
-			return await _dbContext.Buildings.Include(b => b.WaterMeter).ToListAsync();
+			List<BuildingModel> buildings = await _dbContext.Buildings.Include(b => b.WaterMeter).ToListAsync();
+
+			return Mapper.Map<IEnumerable<BuildingModel>, List<BuildingReturnModel>>(buildings);
 		}
 
-		public async Task<Building> GetBuildingWithMaxConsumption()
+		public async Task<BuildingReturnModel> GetBuildingWithMaxConsumption()
 		{
-			return await _dbContext.Buildings
+			BuildingModel building = await _dbContext.Buildings
 				.Include(b => b.WaterMeter)
 				.FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Max(x => x.WaterMeter.CounterValue));
+
+			return Mapper.Map<BuildingModel, BuildingReturnModel>(building);
 		}
 
-		public async Task<Building> GetBuildingWithMinConsumption()
+		public async Task<BuildingReturnModel> GetBuildingWithMinConsumption()
 		{
-			return await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Min(x => x.WaterMeter.CounterValue));
+			BuildingModel building = await _dbContext.Buildings.Include(b => b.WaterMeter).FirstOrDefaultAsync(b => b.WaterMeter.CounterValue == _dbContext.Buildings.Min(x => x.WaterMeter.CounterValue));
+
+			return Mapper.Map<BuildingModel, BuildingReturnModel>(building);
 		}
 
-		public async Task<bool> Add(Building building)
+		public async Task<Response> Add(BuildingCreateModel building)
 		{
-			Building overlap = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == building.Id);
+			building.AddressHashCode = building.Address.GetHashCode();
 
-			if (overlap != null) return false;
+			BuildingModel convertBuilding = Mapper.Map<BuildingCreateModel, BuildingModel>(building);			
+
+			BuildingModel overlapId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == convertBuilding.Id);
+
+			if (overlapId != null)
+				return new Response
+				{
+					Message = "Такой Id уже используется."
+				};
+
+			BuildingModel overlapAddress = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.AddressHashCode == convertBuilding.AddressHashCode);
+
+			if (overlapAddress != null)
+				return new Response
+				{
+					Message = "Такой адрес уже используется."
+				};
 
 			try
 			{
-				_dbContext.Buildings.Add(building);
+				_dbContext.Buildings.Add(convertBuilding);
 
 				await _dbContext.SaveChangesAsync();
 
-				return true;
+				return new Response { Ok = true };
 			}
 			catch
 			{
-				return false;
+				return new Response { Message = "Произошла ошибка при добавлении. Пожалуйсте повторите попытку." };
 			}
 		}
 
-		public async Task<bool> UpdateById(int id, Building building)
+		public async Task<Response> UpdateById(int id, BuildingUpdateModel building)
 		{
+			building.AddressHashCode = building.Address.GetHashCode();
+
+			BuildingModel convertBuilding = Mapper.Map<BuildingUpdateModel, BuildingModel>(building);
+
 			try
 			{
-				_dbContext.Entry(building).State = EntityState.Modified;
+				_dbContext.Entry(convertBuilding).State = EntityState.Modified;
 
 				await _dbContext.SaveChangesAsync();
 
-				return true;
+				return new Response { Ok = true };
 			}
-			catch (Exception e)
+			catch
 			{
-				return false;
+				return new Response { Message = "Произошла ошибка при добавлении. Пожалуйсте повторите попытку." };
 			}
 		}
 
-		public async Task<bool> Delete(int id)
+		public async Task<Response> Delete(int id)
 		{
-			Building target = await _dbContext.Buildings.FindAsync(id);
+			BuildingModel target = await _dbContext.Buildings.FindAsync(id);
 
-			if (target is null) return false;
+			if (target is null) return new Response { Message = "Строение не найдено." };
 
 			try
 			{
@@ -88,17 +121,31 @@ namespace DanfossProject.Data.Concrete.Services
 
 				await _dbContext.SaveChangesAsync();
 
-				return true;
+				return new Response { Ok = true };
 			}
 			catch
 			{
-				return false;
+				return new Response { Message = "Произошла ошибка при удалении. Пожалуйсте повторите попытку." };
 			}
+		}
+
+		private bool disposed = false;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					_dbContext.Dispose();
+				}
+			}
+			this.disposed = true;
 		}
 
 		public void Dispose()
 		{
-			_dbContext.Dispose();
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 	}

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DanfossProject.Data.Models.Entities
 {
@@ -29,5 +26,28 @@ namespace DanfossProject.Data.Models.Entities
 		//[RegularExpression(@"^[а-яА-ЯёЁa-zA-Z0-9/-]+$", ErrorMessage = "" +
 		//	"Некорректное номер квартиры")]
 		//public string AppartamentNumber { get; set; }
+
+		public override bool Equals(object obj)
+		{
+			if (obj is null || GetType() != obj.GetType())
+				return false;
+
+			AddressModel adr = (AddressModel)obj;
+
+			
+
+			return (Country.Equals(adr.Country)) && (ZIPCode == ZIPCode) && (City.Equals(adr.City)) && (Street.Equals(adr
+				.Street)) && (HouseNumber.Equals(adr.HouseNumber));
+		}
+
+		public override int GetHashCode()
+		{
+			return Country.GetHashCode() ^ ZIPCode.GetHashCode() ^ City.GetHashCode() ^ Street.GetHashCode() ^ HouseNumber.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return $"{ZIPCode}, {Country}, {City}, {Street}, {HouseNumber}";
+		}
 	}
 }

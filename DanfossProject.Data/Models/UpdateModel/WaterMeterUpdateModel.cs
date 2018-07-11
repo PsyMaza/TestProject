@@ -1,14 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DanfossProject.Data.Models.Entities
+namespace DanfossProject.Data.Models.UpdateModel
 {
-	public class WaterMeterModel
-    {
-		[Key]
+	public class WaterMeterUpdateModel
+	{
 		public int Id { get; set; }
 
-		[Index(IsUnique = true)]
 		[Required(ErrorMessage = "Заводской номер не может быть пустым")]
 		[StringLength(15, ErrorMessage = "Длина строки не может содержать более 15 символов")]
 		[RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Некорректный номер")]
