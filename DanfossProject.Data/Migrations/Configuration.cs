@@ -19,10 +19,6 @@ namespace DanfossProject.Data.Migrations
         {
 			using (BaseDatabaseContext db = new BaseDatabaseContext())
 			{
-				context.Database.ExecuteSqlCommand("ALTER TABLE Products DROP CONSTRAINT Product_Category");
-				db.Database.ExecuteSqlCommand("ALTER TABLE BuildingModels ADD CONSTRAINT WaterMeterModels FOREIGN KEY (WaterMeterId) REFERENCES WaterMeterModels (Id) ON UPDATE CASCADE ON DELETE SET NULL");
-				
-
 				if (db.Buildings.Count() == 0)
 				{
 					db.Buildings.Add(new BuildingModel
