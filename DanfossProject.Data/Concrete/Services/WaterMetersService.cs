@@ -77,7 +77,7 @@ namespace DanfossProject.Data.Concrete.Services
 
 				return new Response { Ok = true };
 			}
-			catch
+			catch (Exception e)
 			{
 				return new Response { Message = "Произошла ошибка при удалении. Пожалуйсте повторите попытку." };
 			}

@@ -1,0 +1,72 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+
+      <ng-template matStepLabel>Адрес</ng-template>
+
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Компания" value="Данфосс" formControlName="company">
+      </mat-form-field>
+
+      <br>
+
+      <mat-form-field>
+        <input matInput placeholder="Индекс" formControlName="zip" required>
+      </mat-form-field>
+      &nbsp;
+      <mat-form-field>
+        <input matInput placeholder="Страна" formControlName="country" required>
+      </mat-form-field>
+      &nbsp;
+      <mat-form-field>
+        <input matInput placeholder="Город" formControlName="city" required>
+      </mat-form-field>
+      &nbsp;
+      <mat-form-field>
+        <input matInput placeholder="Улица" formControlName="street">
+      </mat-form-field>
+      &nbsp;
+      <mat-form-field>
+        <input matInput placeholder="Строение" formControlName="building" required>
+      </mat-form-field>
+
+      <div>
+        <button mat-button color="primary" matStepperNext>Вперед</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Добавить счетчик</ng-template>
+
+      <mat-form-field *ngIf="load" class="example-full-width">
+        <input type="text" placeholder="Выберите счетчик" aria-label="Number" matInput formControlName="waterMeter" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <div>
+        <button mat-button color="primary" matStepperPrevious>Назад</button>
+        <button mat-button color="primary" matStepperNext>Вперед</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Завершение.</ng-template>
+    <button mat-raised-button color="primary" (click)="onSubmit()">Сохранить</button>
+    <br>
+    <div *ngIf="errors" class="alert alert-danger" role="alert">
+      <strong>Уупс!</strong> {{errors}}
+    </div>
+    <div *ngIf="message" class="alert alert-success" role="alert">
+      {{message}}
+    </div>
+    <div>
+      <button mat-button color="primary" matStepperPrevious>Назад</button>
+      <button mat-button color="primary" (click)="stepper.reset()">Сброс</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

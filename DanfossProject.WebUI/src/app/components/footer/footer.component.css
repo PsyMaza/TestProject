@@ -1,0 +1,45 @@
+.footer {
+	padding: 1rem 0;
+    text-align: center;
+    border-top: 1px solid #e7e7e7;
+}
+
+.footer ul {
+	margin-bottom: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.footer ul li {
+	display: inline-block;
+}
+
+.footer ul li a {
+	color: inherit;
+	padding: 1rem;
+	font-weight: 500;
+	font-size: 12px;
+	text-transform: uppercase;
+	border-radius: 3px;
+	text-decoration: none;
+	position: relative;
+	display: block;
+}
+
+.footer ul li a:hover {
+    text-decoration: none;
+    border-bottom: 3px solid #777;
+}
+
+.footer .copyright {
+	padding: 15px 0;
+}
+
+.footer .pull-left {
+    float: left;
+}
+
+.footer .pull-right {
+	float: right;
+	margin-right: 15px;
+}

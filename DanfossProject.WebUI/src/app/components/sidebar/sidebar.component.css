@@ -1,0 +1,129 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 260px;
+  background: #fff;
+  box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.logo-img {
+  display: flex;
+  justify-content: center;
+  background-color: red;
+}
+
+.navbar-form {
+  border: none;
+  box-shadow: none;
+}
+
+.navbar-form .input-group {
+  font-size: 1.7em;
+  height: 36px;
+  width: 78%;
+  padding-left: 17px;
+}
+
+.nav {
+  margin-top: 20px;
+  display: block;
+}
+
+p {
+  margin: 0;
+  line-height: 30px;
+  font-size: 14px;
+  position: relative;
+  display: block;
+  height: auto;
+  white-space: nowrap;
+}
+
+i {
+  font-size: 24px;
+  float: left;
+  margin-right: 15px;
+  line-height: 30px;
+  width: 30px;
+  text-align: center;
+  color: #a9afbb;
+}
+
+li>a {
+  background-color: transparent;
+  outline: none;
+}
+
+li>a :hover {
+  background-color: transparent;
+  outline: none;
+}
+
+li>a :focus {
+  background-color: transparent;
+  outline: none;
+}
+
+li>a :first-child {
+  margin: 0 15px;
+}
+
+li>a :first :hover {
+  background-color: rgba(200, 200, 200, 0.2);
+  color: #3c4858;
+  box-shadow: none;
+}
+
+.nav li a,
+.nav li .dropdown-menu a {
+  margin: 10px 15px 0;
+  border-radius: 3px;
+  color: #3c4858;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-transform: capitalize;
+  font-size: 13px;
+  padding: 10px 15px;
+}
+
+.logo {
+  margin: 0;
+  display: block;
+  position: relative;
+  z-index: 4;
+}
+
+.logo :after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 15px;
+  height: 1px;
+  width: calc(100% - 30px);
+  background-color: rgba(180, 180, 180, .3);
+}
+
+.logo .simple-text {
+  text-transform: uppercase;
+  padding: 1rem 0;
+  display: inline-block;
+  font-size: 18px;
+  color: #3c4858;
+  white-space: nowrap;
+  font-weight: 300;
+  line-height: 30px;
+  overflow: hidden;
+  text-align: center;
+  display: block;
+}
+
+.nav li:hover:not(.active)>a {
+  background-color: rgba(214, 214, 214, 0.781);
+}
+
+.nav li.active {
+  background-color: #f44336;
+}

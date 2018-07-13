@@ -1,0 +1,43 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+  
+        <ng-template matStepLabel>Счетчик</ng-template>
+  
+        <mat-form-field class="example-full-width">
+            <input matInput #serial maxlength="15" placeholder="Серийный номер" formControlName="serial" required>
+            <mat-hint align="start"><strong>Серийный номер состоит из 15 символов</strong> </mat-hint>
+            <mat-hint align="end">{{serial.value.length}} / 15</mat-hint>
+          </mat-form-field>
+  
+          <br>
+          <br>
+          <br>
+  
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="Показания счетчика" formControlName="counterValue" required>
+        </mat-form-field>
+  
+        <div>
+          <button mat-button color="primary" matStepperNext>Вперед</button>
+        </div>
+      </form>
+    </mat-step>
+    
+    <mat-step>
+      <ng-template matStepLabel>Завершение.</ng-template>
+      <button mat-raised-button color="primary" (click)="onSubmit()">Сохранить</button>
+      <br>
+      <div *ngIf="errors" class="alert alert-danger" role="alert">
+        <strong>Уупс!</strong> {{errors}}
+      </div>
+      <div *ngIf="message" class="alert alert-success" role="alert">
+        {{message}}
+      </div>
+      <div>
+        <button mat-button color="primary" matStepperPrevious>Назад</button>
+        <button mat-button color="primary" (click)="stepper.reset()">Сброс</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+  

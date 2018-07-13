@@ -1,0 +1,52 @@
+<button mat-stroked-button color="primary" style="margin: 15px;" (click)="addBuilding()">
+  Добавить дом</button>
+
+<div class="pull-right">
+    <button mat-icon-button color="primary" (click)="refreshTable()" matTooltip="Обновить">
+        <mat-icon>refresh</mat-icon>
+      </button>
+</div>
+
+<table *ngIf="load" mat-table [(dataSource)]="dataSource" matSort class="mat-elevation-z8">
+
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef> No. </th>
+    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="company">
+    <th mat-header-cell *matHeaderCellDef> Компания </th>
+    <td mat-cell *matCellDef="let element"> {{element.company}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef> Адрес </th>
+    <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="serial">
+    <th mat-header-cell *matHeaderCellDef> S/n </th>
+    <td mat-cell *matCellDef="let element"> {{element.serial}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="counterValue">
+    <th mat-header-cell *matHeaderCellDef> Показания </th>
+    <td mat-cell *matCellDef="let element"> {{element.counterValue}} </td>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Действия </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button color="primary" matTooltip="Редактировать" (click)="editBuilding(element.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" matTooltip="Удалить" (click)="deleteBuilding(element.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSizeOptions] = "[5, 10, 20]" showFirstLastButtons></mat-paginator> 
