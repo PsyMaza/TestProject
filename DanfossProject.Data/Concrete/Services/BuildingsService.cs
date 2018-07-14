@@ -55,40 +55,33 @@ namespace DanfossProject.Data.Concrete.Services
 
 		public async Task<Response> Add(BuildingCreateModel building)
 		{
+			if (building.Id != 0)
+			{
+				return new Response { Message = "Не корректный Id" };
+			}
+
 			building.AddressHashCode = building.Address.GetHashCode();
 
-			BuildingModel convertBuilding = Mapper.Map<BuildingCreateModel, BuildingModel>(building);			
+			List<BuildingModel> overlap;
 
-			BuildingModel overlapId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.Id == convertBuilding.Id);
-
-			if (overlapId != null)
-				return new Response
-				{
-					Message = "Такой Id уже используется."
-				};
-
-			BuildingModel overlapAddress = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.AddressHashCode == convertBuilding.AddressHashCode);
-
-			if (overlapAddress != null)
-				return new Response
-				{
-					Message = "Такой адрес уже используется."
-				};
-
-			if (convertBuilding.WaterMeterId == 0)
+			if (building.WaterMeterId == 0)
 			{
-				convertBuilding.WaterMeterId = null;
+				building.WaterMeterId = null;
+				overlap = await _dbContext.Buildings.Where(b => b.AddressHashCode == building.AddressHashCode).ToListAsync();
 			}
 			else
 			{
-				BuildingModel overlapWaterMeterId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.WaterMeterId == building.WaterMeterId);
-
-				if (overlapWaterMeterId != null) return new Response
-				{
-					Message = $"Счетчик с таким s/n уже установлен по адресу {overlapWaterMeterId.Address.ToString()}"
-				};
+				overlap = await _dbContext.Buildings.Where(b => b.AddressHashCode == building.AddressHashCode || b.WaterMeterId == building.WaterMeterId).ToListAsync();
 			}
 
+			foreach (var b in overlap)
+			{
+				if (b.AddressHashCode == building.AddressHashCode) return new Response { Message = "Такой адрес уже используется." };
+
+				if (b.WaterMeterId == building.WaterMeterId) return new Response { Message = $"Счетчик с таким s/n уже установлен по адресу {b.Address.ToString()}" };
+			}
+
+			BuildingModel convertBuilding = Mapper.Map<BuildingCreateModel, BuildingModel>(building);
 
 			try
 			{
