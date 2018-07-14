@@ -62,19 +62,19 @@ namespace DanfossProject.Data.Concrete.Services
 
 			building.AddressHashCode = building.Address.GetHashCode();
 
-			List<BuildingModel> overlap;
+			List<BuildingModel> overlaps;
 
 			if (building.WaterMeterId == 0)
 			{
 				building.WaterMeterId = null;
-				overlap = await _dbContext.Buildings.Where(b => b.AddressHashCode == building.AddressHashCode).ToListAsync();
+				overlaps = await _dbContext.Buildings.Where(b => b.AddressHashCode == building.AddressHashCode).ToListAsync();
 			}
 			else
 			{
-				overlap = await _dbContext.Buildings.Where(b => b.AddressHashCode == building.AddressHashCode || b.WaterMeterId == building.WaterMeterId).ToListAsync();
+				overlaps = await _dbContext.Buildings.Where(b => b.AddressHashCode == building.AddressHashCode || b.WaterMeterId == building.WaterMeterId).ToListAsync();
 			}
 
-			foreach (var b in overlap)
+			foreach (var b in overlaps)
 			{
 				if (b.AddressHashCode == building.AddressHashCode) return new Response { Message = "Такой адрес уже используется." };
 
