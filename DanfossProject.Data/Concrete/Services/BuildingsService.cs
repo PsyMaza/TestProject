@@ -75,6 +75,17 @@ namespace DanfossProject.Data.Concrete.Services
 					Message = "Такой адрес уже используется."
 				};
 
+			if (building.WaterMeterId != 0)
+			{
+				BuildingModel overlapWaterMeterId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.WaterMeterId == building.WaterMeterId);
+
+				if (overlapWaterMeterId != null) return new Response
+				{
+					Message = $"Счетчик с таким s/n уже установлен по адресу {overlapWaterMeterId.Address.ToString()}"
+				};
+			}
+
+
 			try
 			{
 				_dbContext.Buildings.Add(convertBuilding);
@@ -92,6 +103,19 @@ namespace DanfossProject.Data.Concrete.Services
 		public async Task<Response> UpdateById(int id, BuildingUpdateModel building)
 		{
 			building.AddressHashCode = building.Address.GetHashCode();
+
+			if (building.WaterMeterId == 0)
+			{
+				building.WaterMeterId = null;
+			}
+			else
+			{
+				BuildingModel overlapWaterMeterId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.WaterMeterId == building.WaterMeterId);
+
+				if (overlapWaterMeterId != null) return new Response {
+					Message = $"Счетчик с таким s/n уже установлен по адресу {overlapWaterMeterId.Address.ToString()}"
+				};
+			}
 
 			BuildingModel convertBuilding = Mapper.Map<BuildingUpdateModel, BuildingModel>(building);
 

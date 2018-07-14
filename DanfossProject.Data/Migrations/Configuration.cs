@@ -19,6 +19,9 @@ namespace DanfossProject.Data.Migrations
         {
 			using (BaseDatabaseContext db = new BaseDatabaseContext())
 			{
+				db.Database.ExecuteSqlCommand("ALTER TABLE BuildingModels DROP CONSTRAINT [FK_dbo.BuildingModels_dbo.WaterMeterModels_WaterMeterId]");
+				db.Database.ExecuteSqlCommand("ALTER TABLE BuildingModels ADD CONSTRAINT [FK_dbo.BuildingModels_dbo.WaterMeterModels_WaterMeterId] FOREIGN KEY (WaterMeterId) REFERENCES WaterMeterModels (Id) ON DELETE SET NULL");
+
 				if (db.Buildings.Count() == 0)
 				{
 					db.Buildings.Add(new BuildingModel
