@@ -81,10 +81,8 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   deleteBuilding(id) {
-    const itemSDIndex = this.dataSource.data.findIndex(obj => obj.Id === id);
-    this.dataSource.data.splice(itemSDIndex, 1);
-    this.dataSource.paginator = this.paginator;
     this.buildings.splice(this.buildings.findIndex(e => e.Id === id), 1);
+    this.dataSource.data = this.getBuildingTable();
     this.subscriptions.add(this.buildingRepository.deleteBuilding(id).subscribe());
   }
 

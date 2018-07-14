@@ -74,11 +74,8 @@ export class WaterMeterComponent implements OnInit, OnDestroy {
   }
 
   deleteWaterMeter(id) {
-    this.dataSource.data.splice();
-    const itemSDIndex = this.dataSource.data.findIndex(obj => obj.Id === id);
-    this.dataSource.data.splice(itemSDIndex, 1);
-    this.dataSource.paginator = this.paginator;
     this.waterMeters.splice(this.waterMeters.findIndex(e => e.Id === id), 1);
+    this.dataSource.data = this.getBuildingTable();
     this.subscriptions.add(this.waterMeterRepository.deleteWaterMeter(id).subscribe());
   }
 
