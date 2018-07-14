@@ -1,18 +1,20 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { WaterMeterRepository } from '../../Shared/repository/waterMeter.repository';
-import { WaterMeterUpdateModel } from '../../Shared/models/waterMeter-update.model';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { WaterMeter } from '../../Shared/models/waterMeter.model';
-import { DialogData } from '../../buildings/buildings.component';
-import { Subscription } from 'rxjs';
+import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
+import {Validators, FormBuilder, FormGroup} from '@angular/forms';
+import {WaterMeterRepository} from '../../Shared/repository/waterMeter.repository';
+import {WaterMeterUpdateModel} from '../../Shared/models/waterMeter-update.model';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {WaterMeter} from '../../Shared/models/waterMeter.model';
+import {DialogData} from '../../buildings/buildings.component';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-edit-water-meter',
   templateUrl: './edit-water-meter.component.html',
   styleUrls: ['./edit-water-meter.component.css']
 })
-export class EditWaterMeterComponent implements OnInit, OnDestroy {
+
+export class EditWaterMeterComponent implements OnInit,
+OnDestroy {
 
   load = false;
   isLinear = true;
@@ -20,7 +22,7 @@ export class EditWaterMeterComponent implements OnInit, OnDestroy {
   message: string;
   firstFormGroup: FormGroup;
   currentWaterModel: WaterMeter;
-  subscriptions: Subscription;
+  subscriptions: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,18 +32,19 @@ export class EditWaterMeterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscriptions = this.waterMeterRepository
-    .getWaterMeter(this.data.id)
-    .subscribe(data => {
-      this.currentWaterModel = data;
-      console.log(this.currentWaterModel);
-      this.load = true;
-      this.initForm();
-    });
+    this
+      .subscriptions
+      .add(this.waterMeterRepository.getWaterMeter(this.data.id).subscribe(data => {
+        this.currentWaterModel = data;
+        this.load = true;
+        this.initForm();
+      }));
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this
+      .subscriptions
+      .unsubscribe();
   }
 
   initForm() {
@@ -60,10 +63,7 @@ export class EditWaterMeterComponent implements OnInit, OnDestroy {
     this.errors = '';
     this.message = '';
 
-    const {
-      serial,
-      counterValue
-    } = this.firstFormGroup.value;
+    const {serial, counterValue} = this.firstFormGroup.value;
 
     const updateWaterMeter: WaterMeterUpdateModel = {
       Id: this.currentWaterModel.Id,

@@ -15,10 +15,5 @@ namespace DanfossProject.Data
 		public DbSet<BuildingModel> Buildings { get; set; }
 
 		public DbSet<WaterMeterModel> WaterMeters { get; set; }
-
-		protected override void Dispose(bool disposing)
-		{
-			base.Dispose(disposing);
-		}
 	}
 }

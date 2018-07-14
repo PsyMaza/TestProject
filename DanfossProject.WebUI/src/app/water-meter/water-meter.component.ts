@@ -28,7 +28,7 @@ export class WaterMeterComponent implements OnInit, OnDestroy {
   dataSource;
   createWaterMeterDialog: MatDialogRef<CreateWaterMeterComponent>;
   editWaterMeterDialog: MatDialogRef<EditWaterMeterComponent>;
-  subscriptions: Subscription;
+  subscriptions: Subscription = new Subscription();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -40,16 +40,23 @@ export class WaterMeterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptions = this.waterMeterRepository.getWaterMeters()
+    this.subscriptions.add(this.waterMeterRepository.getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         this.dataSource = new MatTableDataSource<WaterMeterTable>(this.getBuildingTable());
         this.dataSource.paginator = this.paginator;
         this.load = true;
-      });
+      }));
 
-      this.subscriptions.add(this.filterService.filterAttribute
-      .subscribe(filter => this.applyFilter(filter)));
+      this.subscriptions.add(
+        this.filterService.filterAttribute
+          .subscribe(filter => this.applyFilter(filter))
+      );
+
+      this.subscriptions.add(
+        this.dialog._afterAllClosed
+          .subscribe(() => this.refreshTable())
+      );
   }
 
   ngOnDestroy() {
@@ -97,7 +104,9 @@ export class WaterMeterComponent implements OnInit, OnDestroy {
 
   refreshTable() {
     this.subscriptions.add(this.waterMeterRepository.getWaterMeters()
-        .subscribe(e => this.waterMeters = e));
-      this.dataSource.data = this.getBuildingTable();
+        .subscribe(data => {
+          this.waterMeters = data;
+          this.dataSource.data = this.getBuildingTable();
+        }));
   }
 }

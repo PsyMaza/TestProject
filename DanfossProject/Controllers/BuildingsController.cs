@@ -1,14 +1,10 @@
 ﻿using DanfossProject.Data.Abstract.Services;
 using DanfossProject.Data.Models;
 using DanfossProject.Data.Models.CreateModel;
-using DanfossProject.Data.Models.Entities;
 using DanfossProject.Data.Models.ReturnModel;
 using DanfossProject.Data.Models.UpdateModel;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -19,7 +15,7 @@ namespace DanfossProject.Controllers
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
 	public class BuildingsController : ApiController
     {
-		private IBuildingsService _buildingsService;
+		private readonly IBuildingsService _buildingsService;
 
 		public BuildingsController(IBuildingsService service)
 		{

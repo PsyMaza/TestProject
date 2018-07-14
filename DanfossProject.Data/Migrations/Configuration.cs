@@ -1,12 +1,10 @@
+using System.Data.Entity.Migrations;
+using System.Linq;
+using DanfossProject.Data.Models.Entities;
+
 namespace DanfossProject.Data.Migrations
 {
-	using DanfossProject.Data.Models.Entities;
-	using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<DanfossProject.Data.BaseDatabaseContext>
+	internal sealed class Configuration : DbMigrationsConfiguration<BaseDatabaseContext>
     {
         public Configuration()
         {
@@ -22,7 +20,7 @@ namespace DanfossProject.Data.Migrations
 				db.Database.ExecuteSqlCommand("ALTER TABLE BuildingModels DROP CONSTRAINT [FK_dbo.BuildingModels_dbo.WaterMeterModels_WaterMeterId]");
 				db.Database.ExecuteSqlCommand("ALTER TABLE BuildingModels ADD CONSTRAINT [FK_dbo.BuildingModels_dbo.WaterMeterModels_WaterMeterId] FOREIGN KEY (WaterMeterId) REFERENCES WaterMeterModels (Id) ON DELETE SET NULL");
 
-				if (db.Buildings.Count() == 0)
+				if (!db.Buildings.Any())
 				{
 					db.Buildings.Add(new BuildingModel
 					{

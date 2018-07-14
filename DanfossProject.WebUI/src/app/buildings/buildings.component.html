@@ -1,12 +1,6 @@
 <button mat-stroked-button color="primary" style="margin: 15px;" (click)="addBuilding()">
   Добавить дом</button>
 
-<div class="pull-right">
-    <button mat-icon-button color="primary" (click)="refreshTable()" matTooltip="Обновить">
-        <mat-icon>refresh</mat-icon>
-      </button>
-</div>
-
 <table *ngIf="load" mat-table [(dataSource)]="dataSource" matSort class="mat-elevation-z8">
 
   <ng-container matColumnDef="position">

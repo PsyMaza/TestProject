@@ -4,7 +4,6 @@ import { Observable, Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { WaterMeterRepository } from '../../Shared/repository/waterMeter.repository';
 import { WaterMeter } from '../../Shared/models/waterMeter.model';
-import { Building } from '../../Shared/models/building.model';
 import { Address } from '../../Shared/models/address.interface';
 import { BuildingRepository } from '../../Shared/repository/building.repository';
 import { BuildingCreateModel } from '../../Shared/models/building-create.model';
@@ -24,7 +23,7 @@ export class CreateBuildingComponent implements OnInit, OnDestroy {
   secondFormGroup: FormGroup;
   options: string[] = [];
   filteredOptions: Observable<string[]>;
-  subscriptions: Subscription;
+  subscriptions: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,13 +32,13 @@ export class CreateBuildingComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscriptions =
+    this.subscriptions.add(
       this.waterMeterRepository.getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         data.forEach(e => this.options.push(e.SerialNumber));
         this.load = true;
-      });
+      }));
 
     this.initForm();
 
@@ -79,6 +78,7 @@ export class CreateBuildingComponent implements OnInit, OnDestroy {
   onSubmit () {
 
     this.errors = '';
+    this.message = '';
 
     const { company, zip, country, city, street, building } = this.firstFormGroup.value;
     const { waterMeter } = this.secondFormGroup.value;

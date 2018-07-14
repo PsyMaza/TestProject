@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
-import {Validators, FormControl, FormBuilder, FormGroup} from '@angular/forms';
+import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {Observable, Subscription} from 'rxjs';
 import {BuildingRepository} from '../../Shared/repository/building.repository';
 import {WaterMeterRepository} from '../../Shared/repository/waterMeter.repository';
@@ -28,7 +28,7 @@ export class EditBuildingComponent implements OnInit, OnDestroy {
   options: string[] = [];
   filteredOptions: Observable < string[] >;
   currentBuilding: Building;
-  subscriptions: Subscription;
+  subscriptions: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,13 +42,13 @@ export class EditBuildingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscriptions =
+    this.subscriptions.add(
       this.waterMeterRepository
       .getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         data.forEach(e => this.options.push(e.SerialNumber));
-      });
+      }));
 
     this.subscriptions.add(
       this.buildingRepository
@@ -105,6 +105,7 @@ export class EditBuildingComponent implements OnInit, OnDestroy {
   onSubmit() {
 
     this.errors = '';
+    this.message = '';
 
     const {
       company,
@@ -142,9 +143,9 @@ export class EditBuildingComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.buildingRepository
       .updateBuilding(this.currentBuilding.Id, updateBuilding)
-      .subscribe(result => {
-        this.message = 'Изменения сохранены.';
-      }, errors => this.errors = errors.error.Message)
+      .subscribe(() => {
+          this.message = 'Изменения сохранены.';
+        }, errors => this.errors = errors.error.Message)
     );
   }
 

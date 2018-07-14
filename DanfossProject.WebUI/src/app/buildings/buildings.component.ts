@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatDialog, MatDialogRef, MatPaginator, MatTableDataSource } from '@angular/material';
 import { CreateBuildingComponent } from './create/create-building.component';
 import { BuildingRepository } from '../Shared/repository/building.repository';
 import { Subscription } from 'rxjs';
@@ -27,14 +27,14 @@ export interface BuildigsTable {
 })
 export class BuildingsComponent implements OnInit, OnDestroy {
 
-  buildings: Building[];
+  buildings: Building[] = [];
   load = false;
 
   displayedColumns: string[] = ['position', 'company', 'address', 'serial', 'counterValue', 'actions'];
   dataSource;
   createBuildingDialog: MatDialogRef<CreateBuildingComponent>;
   editBuildingDialog: MatDialogRef<EditBuildingComponent>;
-  subscriptions: Subscription;
+  private subscriptions: Subscription = new Subscription();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -46,18 +46,24 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptions =
+    this.subscriptions.add(
       this.buildingRepository.getBuildings()
       .subscribe(data => {
         this.buildings = data;
         this.dataSource = new MatTableDataSource<BuildigsTable>(this.getBuildingTable());
         this.dataSource.paginator = this.paginator;
         this.load = true;
-      });
+      }));
 
       this.subscriptions.add(
         this.filterService.filterAttribute
-      .subscribe(filter => this.applyFilter(filter)));
+          .subscribe(filter => this.applyFilter(filter))
+      );
+
+      this.subscriptions.add(
+        this.dialog._afterAllClosed
+          .subscribe(() => this.refreshTable())
+      );
   }
 
   ngOnDestroy() {
@@ -75,7 +81,6 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   deleteBuilding(id) {
-    this.dataSource.data.splice();
     const itemSDIndex = this.dataSource.data.findIndex(obj => obj.Id === id);
     this.dataSource.data.splice(itemSDIndex, 1);
     this.dataSource.paginator = this.paginator;
@@ -106,19 +111,10 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   refreshTable() {
-    this.subscriptions.add(
-      this.buildingRepository.getBuildings()
-        .subscribe(e => this.buildings = e));
-
-    this.dataSource.data = this.getBuildingTable();
+    this.buildingRepository.getBuildings()
+      .subscribe(data => {
+        this.buildings = data;
+        this.dataSource.data = this.getBuildingTable();
+      });
   }
 }
-
-
-
-
-
-
-
-
-

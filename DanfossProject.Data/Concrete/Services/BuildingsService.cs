@@ -8,6 +8,7 @@ using DanfossProject.Data.Models.UpdateModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,7 +110,7 @@ namespace DanfossProject.Data.Concrete.Services
 			{
 				BuildingModel overlapWaterMeterId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.WaterMeterId == building.WaterMeterId);
 
-				if (overlapWaterMeterId != null) return new Response {
+				if (overlapWaterMeterId != null && overlapWaterMeterId.Id != building.Id) return new Response {
 					Message = $"Счетчик с таким s/n уже установлен по адресу {overlapWaterMeterId.Address.ToString()}"
 				};
 			}
@@ -118,7 +119,7 @@ namespace DanfossProject.Data.Concrete.Services
 
 			try
 			{
-				_dbContext.Entry(convertBuilding).State = EntityState.Modified;
+				_dbContext.Buildings.AddOrUpdate(convertBuilding);
 
 				await _dbContext.SaveChangesAsync();
 

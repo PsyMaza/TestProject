@@ -7,8 +7,8 @@
 
 		public Response()
 		{
-			this.Ok = false;
-			this.Message = string.Empty;
+			Ok = false;
+			Message = string.Empty;
 		}
 	}
 }

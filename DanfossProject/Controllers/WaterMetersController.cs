@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
-using DanfossProject.Data;
 using DanfossProject.Data.Abstract.Services;
 using DanfossProject.Data.Models;
 using DanfossProject.Data.Models.CreateModel;
-using DanfossProject.Data.Models.Entities;
 using DanfossProject.Data.Models.ReturnModel;
 using DanfossProject.Data.Models.UpdateModel;
 

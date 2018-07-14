@@ -13,11 +13,6 @@ namespace DanfossProject
 
 			config.MapHttpAttributeRoutes();
 
-			//config.Routes.MapHttpRoute(
-			//	name: null,
-			//	routeTemplate: "api/WaterMeters/UpdateBySerialNumber/{serialNumber}"
-			//);
-
 			config.Routes.MapHttpRoute(
 				name: null,
 				routeTemplate: "api/{controller}/{action}/{id}",

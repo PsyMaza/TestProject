@@ -9,12 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DanfossProject.Data.Concrete.Services
 {
-	public class WaterMetersService : IWaterMetersService, IDisposable
+	public class WaterMetersService : IWaterMetersService
 	{
 		private readonly BaseDatabaseContext _dbContext;
 
@@ -77,7 +76,7 @@ namespace DanfossProject.Data.Concrete.Services
 
 				return new Response { Ok = true };
 			}
-			catch (Exception e)
+			catch
 			{
 				return new Response { Message = "Произошла ошибка при удалении. Пожалуйсте повторите попытку." };
 			}
@@ -136,18 +135,18 @@ namespace DanfossProject.Data.Concrete.Services
 			}
 		}
 
-		private bool disposed = false;
+		private bool _disposed;
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this.disposed)
+			if (!_disposed)
 			{
 				if (disposing)
 				{
 					_dbContext.Dispose();
 				}
 			}
-			this.disposed = true;
+			_disposed = true;
 		}
 
 		public void Dispose()

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {WaterMeterRepository} from '../../Shared/repository/waterMeter.repository';
@@ -37,6 +37,7 @@ export class CreateWaterMeterComponent implements OnInit {
   onSubmit() {
 
     this.errors = '';
+    this.message = '';
 
     const {
       serial,

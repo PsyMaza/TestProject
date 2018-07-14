@@ -3,12 +3,8 @@ using DanfossProject.Data.Models.CreateModel;
 using DanfossProject.Data.Models.Entities;
 using DanfossProject.Data.Models.ReturnModel;
 using DanfossProject.Data.Models.UpdateModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace DanfossProject.App_Start
+namespace DanfossProject
 {
 	public class AutoMapperConfig
 	{
