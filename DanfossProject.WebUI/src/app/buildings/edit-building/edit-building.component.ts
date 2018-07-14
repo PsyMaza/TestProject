@@ -1,6 +1,6 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
 import {Validators, FormControl, FormBuilder, FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {BuildingRepository} from '../../Shared/repository/building.repository';
 import {WaterMeterRepository} from '../../Shared/repository/waterMeter.repository';
 import {WaterMeter} from '../../Shared/models/waterMeter.model';
@@ -16,7 +16,7 @@ import {Building} from '../../Shared/models/building.model';
   templateUrl: './edit-building.component.html',
   styleUrls: ['./edit-building.component.css'
 ]})
-export class EditBuildingComponent implements OnInit {
+export class EditBuildingComponent implements OnInit, OnDestroy {
 
   load = false;
   isLinear = false;
@@ -28,6 +28,7 @@ export class EditBuildingComponent implements OnInit {
   options: string[] = [];
   filteredOptions: Observable < string[] >;
   currentBuilding: Building;
+  subscriptions: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -41,22 +42,26 @@ export class EditBuildingComponent implements OnInit {
 
   ngOnInit() {
 
-    this
-      .waterMeterRepository
+    this.subscriptions.add(
+      this.waterMeterRepository
       .getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         data.forEach(e => this.options.push(e.SerialNumber));
-      });
+      }));
 
-    this
-      .buildingRepository
+    this.subscriptions.add(
+      this.buildingRepository
       .getBuilding(this.data.id)
       .subscribe(e => {
         this.currentBuilding = e;
         this.load = true;
         this.initForm();
-      });
+      }));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   private _filter(value: string): string[] {
@@ -134,12 +139,13 @@ export class EditBuildingComponent implements OnInit {
       this.errors = 'Форма не валидна';
     }
 
-    this
-      .buildingRepository
+    this.subscriptions.add(
+      this.buildingRepository
       .updateBuilding(this.currentBuilding.Id, updateBuilding)
       .subscribe(result => {
         this.message = 'Изменения сохранены.';
-      }, errors => this.errors = errors.error.Message);
+      }, errors => this.errors = errors.error.Message)
+    );
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { CreateBuildingComponent } from './create/create-building.component';
 import { BuildingRepository } from '../Shared/repository/building.repository';
@@ -25,7 +25,7 @@ export interface BuildigsTable {
   templateUrl: './buildings.component.html',
   styleUrls: ['./buildings.component.css']
 })
-export class BuildingsComponent implements OnInit {
+export class BuildingsComponent implements OnInit, OnDestroy {
 
   buildings: Building[];
   load = false;
@@ -34,6 +34,7 @@ export class BuildingsComponent implements OnInit {
   dataSource;
   createBuildingDialog: MatDialogRef<CreateBuildingComponent>;
   editBuildingDialog: MatDialogRef<EditBuildingComponent>;
+  subscriptions: Subscription;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -45,15 +46,22 @@ export class BuildingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.buildingRepository.getBuildings()
+    this.subscriptions.add(
+      this.buildingRepository.getBuildings()
       .subscribe(data => {
         this.buildings = data;
         this.dataSource = new MatTableDataSource<BuildigsTable>(this.getBuildingTable());
         this.dataSource.paginator = this.paginator;
         this.load = true;
-      });
-      this.filterService.filterAttribute
-      .subscribe(filter => this.applyFilter(filter));
+      }));
+
+      this.subscriptions.add(
+        this.filterService.filterAttribute
+      .subscribe(filter => this.applyFilter(filter)));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   addBuilding() {
@@ -72,11 +80,12 @@ export class BuildingsComponent implements OnInit {
     this.dataSource.data.splice(itemSDIndex, 1);
     this.dataSource.paginator = this.paginator;
     this.buildings.splice(this.buildings.findIndex(e => e.Id === id), 1);
-    this.buildingRepository.deleteBuilding(id).subscribe();
+    this.subscriptions.add(this.buildingRepository.deleteBuilding(id).subscribe());
   }
 
   getBuildingTable(): BuildigsTable[] {
     let count = 1;
+    // tslint:disable-next-line:prefer-const
     let data: BuildigsTable[] = [];
     let temp;
 
@@ -97,9 +106,11 @@ export class BuildingsComponent implements OnInit {
   }
 
   refreshTable() {
-    this.buildingRepository.getBuildings()
-        .subscribe(e => this.buildings = e);
-      this.dataSource.data = this.getBuildingTable();
+    this.subscriptions.add(
+      this.buildingRepository.getBuildings()
+        .subscribe(e => this.buildings = e));
+
+    this.dataSource.data = this.getBuildingTable();
   }
 }
 

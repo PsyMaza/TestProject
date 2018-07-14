@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { WaterMeterRepository } from '../../Shared/repository/waterMeter.repository';
 import { WaterMeter } from '../../Shared/models/waterMeter.model';
@@ -13,7 +13,7 @@ import { BuildingCreateModel } from '../../Shared/models/building-create.model';
   templateUrl: './create-building.component.html',
   styleUrls: ['./create-building.component.css']
 })
-export class CreateBuildingComponent implements OnInit {
+export class CreateBuildingComponent implements OnInit, OnDestroy {
 
   load = false;
   isLinear = false;
@@ -24,6 +24,7 @@ export class CreateBuildingComponent implements OnInit {
   secondFormGroup: FormGroup;
   options: string[] = [];
   filteredOptions: Observable<string[]>;
+  subscriptions: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,17 +32,14 @@ export class CreateBuildingComponent implements OnInit {
     private waterMeterRepository: WaterMeterRepository
   ) {}
 
-
-
-
-
   ngOnInit() {
-    this.waterMeterRepository.getWaterMeters()
+    this.subscriptions.add(
+      this.waterMeterRepository.getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         data.forEach(e => this.options.push(e.SerialNumber));
         this.load = true;
-      });
+      }));
 
     this.initForm();
 
@@ -51,6 +49,10 @@ export class CreateBuildingComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   private _filter(value: string): string[] {
@@ -88,7 +90,7 @@ export class CreateBuildingComponent implements OnInit {
       HouseNumber: building
     };
 
-    const newBuilding : BuildingCreateModel = {
+    const newBuilding: BuildingCreateModel = {
       Company: company,
       Address: address,
       WaterMeterId: waterMeter ? this.waterMeters.find(e => e.SerialNumber === waterMeter).Id : 0
@@ -98,10 +100,12 @@ export class CreateBuildingComponent implements OnInit {
       return this.errors = 'Форма не валидна';
     }
 
-    this.buildingRepository.addBuilding(newBuilding)
+    this.subscriptions.add(
+      this.buildingRepository.addBuilding(newBuilding)
       .subscribe(result => {
         this.message = 'Дом добавлен.';
-      }, errors => this.errors = errors.error.Message);
+      }, errors => this.errors = errors.error.Message)
+    );
   }
 
 }

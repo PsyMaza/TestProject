@@ -1,17 +1,18 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { WaterMeterRepository } from '../../Shared/repository/waterMeter.repository';
 import { WaterMeterUpdateModel } from '../../Shared/models/waterMeter-update.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { WaterMeter } from '../../Shared/models/waterMeter.model';
 import { DialogData } from '../../buildings/buildings.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-water-meter',
   templateUrl: './edit-water-meter.component.html',
   styleUrls: ['./edit-water-meter.component.css']
 })
-export class EditWaterMeterComponent implements OnInit {
+export class EditWaterMeterComponent implements OnInit, OnDestroy {
 
   load = false;
   isLinear = true;
@@ -19,6 +20,7 @@ export class EditWaterMeterComponent implements OnInit {
   message: string;
   firstFormGroup: FormGroup;
   currentWaterModel: WaterMeter;
+  subscriptions: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -28,7 +30,7 @@ export class EditWaterMeterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.waterMeterRepository
+    this.subscriptions = this.waterMeterRepository
     .getWaterMeter(this.data.id)
     .subscribe(data => {
       this.currentWaterModel = data;
@@ -36,6 +38,10 @@ export class EditWaterMeterComponent implements OnInit {
       this.load = true;
       this.initForm();
     });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   initForm() {

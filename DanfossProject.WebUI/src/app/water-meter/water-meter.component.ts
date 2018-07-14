@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialogRef, MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
 import { CreateWaterMeterComponent } from './create-water-meter/create-water-meter.component';
 import { WaterMeter } from '../Shared/models/waterMeter.model';
 import { EditWaterMeterComponent } from './edit-water-meter/edit-water-meter.component';
 import { FilterService } from '../Shared/services/filter.service';
 import { WaterMeterRepository } from '../Shared/repository/waterMeter.repository';
+import { Subscription } from 'rxjs';
 
 export interface WaterMeterTable {
   id: number;
@@ -18,7 +19,7 @@ export interface WaterMeterTable {
   templateUrl: './water-meter.component.html',
   styleUrls: ['./water-meter.component.css']
 })
-export class WaterMeterComponent implements OnInit {
+export class WaterMeterComponent implements OnInit, OnDestroy {
 
   waterMeters: WaterMeter[];
   load = false;
@@ -27,6 +28,7 @@ export class WaterMeterComponent implements OnInit {
   dataSource;
   createWaterMeterDialog: MatDialogRef<CreateWaterMeterComponent>;
   editWaterMeterDialog: MatDialogRef<EditWaterMeterComponent>;
+  subscriptions: Subscription;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -38,7 +40,7 @@ export class WaterMeterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.waterMeterRepository.getWaterMeters()
+    this.subscriptions = this.waterMeterRepository.getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         this.dataSource = new MatTableDataSource<WaterMeterTable>(this.getBuildingTable());
@@ -46,8 +48,12 @@ export class WaterMeterComponent implements OnInit {
         this.load = true;
       });
 
-      this.filterService.filterAttribute
-      .subscribe(filter => this.applyFilter(filter));
+      this.subscriptions.add(this.filterService.filterAttribute
+      .subscribe(filter => this.applyFilter(filter)));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   addWaterMeter() {
@@ -66,11 +72,12 @@ export class WaterMeterComponent implements OnInit {
     this.dataSource.data.splice(itemSDIndex, 1);
     this.dataSource.paginator = this.paginator;
     this.waterMeters.splice(this.waterMeters.findIndex(e => e.Id === id), 1);
-    this.waterMeterRepository.deleteWaterMeter(id).subscribe();
+    this.subscriptions.add(this.waterMeterRepository.deleteWaterMeter(id).subscribe());
   }
 
   getBuildingTable(): WaterMeterTable[] {
     let count = 1;
+    // tslint:disable-next-line:prefer-const
     let data: WaterMeterTable[] = [];
     let temp;
 
@@ -89,8 +96,8 @@ export class WaterMeterComponent implements OnInit {
   }
 
   refreshTable() {
-    this.waterMeterRepository.getWaterMeters()
-        .subscribe(e => this.waterMeters = e);
+    this.subscriptions.add(this.waterMeterRepository.getWaterMeters()
+        .subscribe(e => this.waterMeters = e));
       this.dataSource.data = this.getBuildingTable();
   }
 }
