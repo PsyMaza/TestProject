@@ -42,13 +42,13 @@ export class EditBuildingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscriptions.add(
+    this.subscriptions =
       this.waterMeterRepository
       .getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         data.forEach(e => this.options.push(e.SerialNumber));
-      }));
+      });
 
     this.subscriptions.add(
       this.buildingRepository

@@ -75,7 +75,11 @@ namespace DanfossProject.Data.Concrete.Services
 					Message = "Такой адрес уже используется."
 				};
 
-			if (building.WaterMeterId != 0)
+			if (convertBuilding.WaterMeterId == 0)
+			{
+				convertBuilding.WaterMeterId = null;
+			}
+			else
 			{
 				BuildingModel overlapWaterMeterId = await _dbContext.Buildings.FirstOrDefaultAsync(b => b.WaterMeterId == building.WaterMeterId);
 

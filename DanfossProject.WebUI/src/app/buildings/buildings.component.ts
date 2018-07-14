@@ -46,14 +46,14 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptions.add(
+    this.subscriptions =
       this.buildingRepository.getBuildings()
       .subscribe(data => {
         this.buildings = data;
         this.dataSource = new MatTableDataSource<BuildigsTable>(this.getBuildingTable());
         this.dataSource.paginator = this.paginator;
         this.load = true;
-      }));
+      });
 
       this.subscriptions.add(
         this.filterService.filterAttribute

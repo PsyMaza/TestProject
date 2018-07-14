@@ -33,13 +33,13 @@ export class CreateBuildingComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscriptions.add(
+    this.subscriptions =
       this.waterMeterRepository.getWaterMeters()
       .subscribe(data => {
         this.waterMeters = data;
         data.forEach(e => this.options.push(e.SerialNumber));
         this.load = true;
-      }));
+      });
 
     this.initForm();
 
@@ -100,12 +100,10 @@ export class CreateBuildingComponent implements OnInit, OnDestroy {
       return this.errors = 'Форма не валидна';
     }
 
-    this.subscriptions.add(
       this.buildingRepository.addBuilding(newBuilding)
       .subscribe(result => {
         this.message = 'Дом добавлен.';
-      }, errors => this.errors = errors.error.Message)
-    );
+      }, errors => this.errors = errors.error.Message);
   }
 
 }
